@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using MaxMind;
 using OTAPI;
@@ -18,6 +19,16 @@ namespace Chireiden.Stellaria
     [ApiVersion(2, 1)]
     public class Stellaria : TerrariaPlugin
     {
+        /*  summery
+            font: Noto Sans Mono CJK JP 
+            
+            Logic::
+            Host->Stellaria(this) … [ Servers ] … Forward … [ SubServers (invisible) ]
+            
+            Structure::
+            [ Servers ] … Wrapper { … [ Real Server ](s) }
+        */
+
         private static Hooks.Net.ReceiveDataHandler _receiveDataHandler;
         internal static Config _config;
         private readonly Dictionary<int, ForwardPlayer> _forward = new Dictionary<int, ForwardPlayer>();
@@ -93,7 +104,8 @@ namespace Chireiden.Stellaria
                     // Packet id (1 byte)      1,
                     // String length (1 byte)  11,
                     // "Terraria194"           84, 101, 114, 114, 97, 114, 105, 97, 49, 57, 52
-                    JoinBytes = new byte[] {1, 11, 84, 101, 114, 114, 97, 114, 105, 97, 49, 57, 52},
+                    // new byte[] {1, 11, 84, 101, 114, 114, 97, 114, 105, 97, 49, 57, 52},
+                    JoinBytes = Encoding.ASCII.GetBytes("Terraria194"),
                     Key = key,
                     Name = "lobby"
                 }, out _config);
